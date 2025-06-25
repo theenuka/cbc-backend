@@ -1,15 +1,16 @@
 import express from 'express';
-const app=express();
 import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
 import productRouter from './routes/productRouter.js';
 import userRouter from './routes/userRouter.js';
 import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
+dotenv.config();
 
+const app = express();
+const mongoUrl = process.env.MONGO_DB_URI 
 
-const mongourl="mongodb+srv://admin:123@cluster0.suda2.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
-
-mongoose.connect(mongourl,{})
+mongoose.connect(mongoUrl,{})
 const connection = mongoose.connection;
 connection.once("open",()=>{
     console.log("Database connected");
