@@ -2,12 +2,27 @@ import User from "../models/user.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
+import { ReturnDocument } from "mongodb";
 dotenv.config();
 
 
 export function createUser(req,res){
 
     const newUserData  = req.body
+    if(newUserData.type == "admin"){
+        if(req.user==null){
+            res.json({
+                message: "Please Login as administrator to create admin accounts"
+            })
+            return
+        }
+        if(req.user.type != "admin"){
+            res.json({
+                message: "Please login as administrator to create admin accounts"
+            })
+            return
+        }}
+
     newUserData.password = bcrypt.hashSync(newUserData.password, 10)
     const user = new User(newUserData);
 
@@ -58,3 +73,25 @@ export function loginUser(req,res){
     )
 }
 
+export function isAdmin(req){
+    if(req.user == null){
+        return false
+    }
+    if(req.user.type != "admin"){
+        return false
+    }
+    return true
+}
+
+export function isCustomer(req){
+    if(req.user == null){
+        return false
+    }
+    if(req.user.type != "customer"){
+        return false
+    }
+    return true
+}
+
+//email": "theenuka24@example.com pw=SecureP@ss123 customer
+//"theenuka@example.com" SecureP@ss123
